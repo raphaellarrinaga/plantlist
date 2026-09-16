@@ -34,7 +34,7 @@ const dismissBanner = () => {
 <template>
   <div v-if="installPrompt && !isHidden" class="pwa-banner">
     <div class="content">
-      <p>Installer <strong>Plant Quiz</strong> sur votre écran d'accueil ?</p>
+      <p>Installer <strong>Plantlist</strong> sur votre écran d'accueil ?</p>
       <div class="actions">
         <button class="btn-install" @click="triggerInstall">Installer</button>
         <button class="btn-close" @click="dismissBanner" aria-label="Fermer">✕</button>
