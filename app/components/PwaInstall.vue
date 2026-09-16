@@ -1,9 +1,9 @@
 <script setup>
 const installPrompt = ref(null)
-const isHidden = ref(false) // État pour la fermeture manuelle
+const isHidden = ref(false) // State for the manual closing.
 
 onMounted(() => {
-  // On vérifie si l'utilisateur a déjà fermé la bannière durant cette session
+  // Check if the user has already dismissed the banner during this session
   const hasDismissed = sessionStorage.getItem('pwa_dismissed')
   if (hasDismissed) {
     isHidden.value = true
@@ -26,7 +26,7 @@ const triggerInstall = async () => {
 
 const dismissBanner = () => {
   isHidden.value = true
-  // On s'en souvient pour la session actuelle
+  // Store the dismissal in sessionStorage to remember for the current session
   sessionStorage.setItem('pwa_dismissed', 'true')
 }
 </script>
@@ -83,7 +83,8 @@ p {
 }
 
 .btn-install {
-  background: #41b883; /* Vert Nuxt pour attirer l'oeil */
+  /* Nuxt green */
+  background: #41b883;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -102,7 +103,6 @@ p {
   padding: 5px;
 }
 
-/* Version desktop plus discrète */
 @media (min-width: 768px) {
   .pwa-banner {
     width: 350px;

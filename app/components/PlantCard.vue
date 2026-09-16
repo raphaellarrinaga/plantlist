@@ -25,7 +25,7 @@ function toggleMore() {
   isOpen.value = !isOpen.value
 }
 
-// --- Groupes de champs détaillés, séparés visuellement par un <hr> ---
+// Field groups.
 const detailGroups = [
   [
     { key: 'type', label: 'Type' },
