@@ -35,12 +35,19 @@
 }
 
 body {
-  background: $page-color;
+  background-color: $color-primary;
   box-sizing: border-box;
   color: $text-color;
   font-family: 'Roboto', Helvetica, Arial, sans-serif;
   font-optical-sizing: auto;
   margin: 0;
+}
+
+.page {
+  // Check if ok. Used to be able to use negative z-index for bgs.
+  background: $page-color;
+  position: relative;
+  z-index: 1;
 }
 
 // Helper classes

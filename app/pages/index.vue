@@ -153,6 +153,6 @@ span.plants__header-actions {
 }
 
 .plants {
-  margin-bottom: 3rem;
+  padding-bottom: 3rem;
 }
 </style>
