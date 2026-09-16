@@ -1,0 +1,78 @@
+// Header
+
+@use "~/assets/sass/_abstracts" as *;
+
+.page-header {
+  background-color: $color-primary;
+  align-items: center;
+  display: flex;
+  margin-bottom: 1.75rem;
+  padding: .2rem .5rem;
+
+  .nav {
+    margin-left: auto;
+  }
+}
+
+.page-title {
+  font-size: 0;
+  margin: 0;
+
+  a {
+    text-decoration: none;
+    // background-color: $color-primary;
+    border-radius: 50%;
+    display: inline-flex;
+    height: 30px;
+    padding: 3px;
+    box-shadow: 0 0 0 0 $color-primary;
+
+    &:hover {
+      background-color: transparent;
+      // background-color: $color-primary;
+      // box-shadow: 0 0 0 2px $color-primary;
+      text-decoration: none;
+    }
+  }
+}
+
+.page-title__text {
+  @include sr;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+}
+
+.nav-list__item {
+  margin-left: auto;
+
+  & + & {
+    margin-left: .5rem;
+  }
+}
+
+.nav-list__link {
+  color: $color-primary-lighter;
+  text-decoration: none;
+  display: inline-block;
+  padding: .1rem .4rem;
+  border-radius: .2rem;
+
+  &:hover {
+    color: $white;
+  }
+
+  &.router-link-active {
+    text-decoration: none;
+    cursor: default;
+  }
+}
+
+.router-link-active {
+  background-color: $color-primary-darker;
+  color: $white;
+  // background-color: $page-color-darker;
+}

@@ -1,0 +1,377 @@
+// Plant Gallery (Natagora quiz)
+
+@use "~/assets/sass/_abstracts" as *;
+
+.toggle-imagefit-button,
+.toggle-names-button,
+.random-button {
+  background-color: rgba(#fefefe, .5);
+  border: 1px solid rgba(#fefefe, .35);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  position: fixed;
+  height: 3rem;
+  width: 3rem;
+  z-index: 3;
+
+  &:hover {
+    background-color: rgba(#fefefe, .85);
+  }
+}
+
+.random-button {
+  bottom: 1.5rem;
+  right: 1rem;
+}
+
+.toggle-names-button {
+  bottom: 1.5rem;
+  right: 5rem;
+}
+
+.toggle-imagefit-button {
+  bottom: 1.5rem;
+  right: 9rem;
+}
+
+.button-gallery {
+  box-sizing: border-box;
+  background: #fefefe;
+  border: 1px solid #dee1ed;
+  border-left: none;
+  padding-left: .5rem;
+  padding-right: .5rem;
+  cursor: pointer;
+
+  &:active,
+  &:focus {
+    background: #fefefe;
+  }
+
+  &:hover {
+    background-color: black;
+    // background: darken(#fefefe, 6%);
+  }
+}
+
+.gallery-item__solution-toggle {
+  background: rgba(#fefefe, .3);
+  border: 1px solid rgba(#fefefe, .2);
+  border-radius: 6px;
+  font-size: 1rem;
+  right: .2rem;
+  line-height: 1;
+  padding: .75rem;
+  position: absolute;
+  top: .2rem;
+  z-index: 2;
+
+  span {
+    opacity: .5;
+  }
+
+  .is-revealed & {
+    background: rgba(#fefefe, .5);
+    border-color: rgba(#fefefe, .5);
+
+    span {
+      opacity: 1;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: rgba(#fefefe, .5);
+    }
+  }
+
+  &:hover {
+    background: rgba(#fefefe, .5);
+    border-color: rgba(#fefefe, .5);
+
+    span {
+      opacity: 1;
+    }
+  }
+
+  &:focus,
+  &:active {
+    background: rgba(#fefefe, .3);
+    border: 1px solid rgba(#fefefe, .2);
+  }
+}
+
+.gallery {
+  margin-bottom: .5rem;
+  margin-top: .5rem;
+
+  @media screen and (min-width: 460px) {
+    display: grid;
+    grid-auto-rows: 220px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: .5rem;
+  }
+
+  @media screen and (min-width: 1000px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-auto-rows: 240px;
+  }
+
+  @media screen and (min-width: 1400px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 380px;
+  }
+
+}
+
+.gallery-item {
+  background-color: #dee1ed;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+
+  @media screen and (max-width: 459px) {
+    margin-bottom: .5rem;
+    height: 280px;
+  }
+}
+
+.gallery-item__front {
+  // border-radius: 6px;
+  // overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.gallery-item__image-toggle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 4;
+  opacity: 0;
+
+  &:hover {
+    cursor: pointer;
+
+    // @todo unzoom.
+    // @todo resize images.
+    // & ~ img {
+    //   transform: scale(1);
+    // }
+  }
+
+}
+
+.gallery-item__count {
+  position: absolute;
+  bottom: 0;
+  font-size: .8rem;
+  left: 0;
+  padding: .25rem .5rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.gallery-item__image {
+  pointer-events: none;
+  user-select: none;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+
+  display: none;
+
+  &.is-active {
+    display: block;
+  }
+
+  // &.is-contain {}
+
+  &.is-cover {
+    object-fit: cover;
+  }
+}
+
+.gallery-item__infos {
+  display: block;
+  background: #f5f6fb;
+  padding: 1rem;
+  // overflow: hidden;
+  overflow: scroll;
+
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  min-height: 50%;
+  left: .75rem;
+  right: .75rem;
+  top: .75rem;
+  bottom: .75rem;
+  border-radius: 4px;
+  z-index: 1;
+  transition: none;
+
+  .is-revealed & {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.is-invasive {
+    box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px rgba(200, 0, 0);
+
+    .gallery-item__botanical {
+      color: rgba(200, 0, 0);
+    }
+  }
+}
+
+.gallery-item__botanical {
+  font-size: .85rem;
+  line-height: 1;
+  margin-bottom: .25em;
+  margin-top: 0;
+}
+
+.gallery-item__familiar {
+  color: #4f4f4f;
+  font-size: .7rem;
+  font-weight: normal;
+  line-height: 1.2;
+  margin-bottom: .9em;
+  margin-top: 0;
+}
+
+.gallery-item__invasive {
+  background-color: rgba(200, 0, 0);
+  border-radius: .2rem;
+  color: rgb(255 235 235);
+  // font-size: .8rem;
+  padding: .1em .3em;
+  text-transform: uppercase;
+  font-size: .6rem;
+}
+
+.gallery-item__metas {
+  p {
+    font-size: .7rem;
+    margin: 0;
+  }
+}
+
+.gallery-item__label {
+  font-weight: bold;
+}
+
+.gallery-nav {
+  margin: .5rem 0 0;
+}
+
+.gallery-nav__button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: .5rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.plants-list {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.plant-list__item {
+  margin-bottom: .25rem;
+  padding-top: .25rem;
+  padding-right: 1.5rem;
+  position: relative;
+
+  @media screen and (min-width: 768px) {
+    padding-left: 2rem;
+    padding-right: 0;
+  }
+
+  &+& {
+    border-top: 1px solid $border;
+  }
+
+  &.is-invasive {
+    color: rgb(149, 13, 13);
+    font-weight: 500;
+  }
+}
+
+.plant-list__item-count {
+  color: $text-light;
+  font-size: .8rem;
+  position: absolute;
+  right: 0;
+  top: .5rem;
+
+  @media screen and (min-width: 768px) {
+    right: auto;
+    top: .5rem;
+    left: 0;
+  }
+}
+
+.plant-list__item-scientific-name {
+  display: block;
+}
+
+.plant-list__item-vernacular-name {
+  color: $text-mid;
+  font-size: .9rem;
+  display: block;
+}
+
+// Filter.
+
+.controls {
+  @media screen and (min-width: 769px) {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+  }
+}
+
+.form-group__label {
+  color: $text-color;
+  font-size: .7rem;
+  text-transform: uppercase;
+  margin-right: .5rem;
+  font-weight: 600;
+}
+
+.form-item__select {
+  border: 1px solid $border;
+  border-radius: .2rem;
+  box-shadow: 0 1px 1px rgba(17,17,17,.06);
+  margin-bottom: .3rem;
+
+  max-width: 5.2rem;
+    font-size: .83rem;
+    padding: .24rem .4rem .23rem .4rem;
+
+  @media screen and (min-width: 460px) {
+    max-width: 12rem;
+  }
+}
+
+.form-group--quiz {
+  .form-item {
+    margin-right: .5rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
