@@ -25,6 +25,12 @@
   line-height: 1.5;
 }
 
+ul {
+  ul {
+    padding-left: 1rem;
+  }
+}
+
 // .page {
 .l-constrain {
   padding: 0 1rem;
@@ -48,6 +54,15 @@ body {
   background: $page-color;
   position: relative;
   z-index: 1;
+}
+
+.main-text {
+  // Infos page.
+  padding-bottom: 2rem;
+}
+
+.text-content {
+  max-width: 40rem;
 }
 
 // Helper classes
