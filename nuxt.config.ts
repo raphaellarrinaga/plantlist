@@ -125,6 +125,10 @@ export default defineNuxtConfig({
         },
       },
     },
+    // For the quiz view.
+    optimizeDeps: {
+      include: ['lodash.orderby', 'lodash.throttle', 'vue-agile'],
+    },
   },
 
   googleFonts: {
