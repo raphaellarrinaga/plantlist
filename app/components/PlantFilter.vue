@@ -3,6 +3,9 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useDebounceFn, onClickOutside } from '@vueuse/core'
 import { usePlantsStore } from '~/stores/plants'
 
+// Import exisiting composables to sync filters with URL query parameters.
+useFilterUrlSync();
+
 const store = usePlantsStore()
 const showFilters = ref(false)
 
@@ -141,6 +144,12 @@ onMounted(() => store.initHeightRange())
           <label class="form-item form-item--checkbox button" :class="{ 'is-active': store.hasPhoto }">
             <input type="checkbox" v-model="store.hasPhoto"> Photo
           </label>
+
+          <div class="form-item">
+            <button class="button button--form button--reset" @click="store.resetFilters()">
+              ↺ Reset
+            </button>
+          </div>
         </div>
       </div>
     </div>

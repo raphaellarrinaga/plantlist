@@ -103,5 +103,22 @@ export const usePlantsStore = defineStore('plants', {
     initHeightRange() {
       this.heightRange = this.heightBounds
     },
+    resetFilters() {
+      this.search = ''
+      this.category = []
+      this.type = []
+      this.family = 'all'
+      this.flowerColor = []
+      this.exposure = 'all'
+      this.origin = 'all'
+      this.edible = false
+      this.medicinal = false
+      this.invasive = false
+      this.hasPhoto = false
+      this.source = []
+      this.heightRange = this.heightBounds
+      this.bloomRange = [1, 12]
+      // `order` and `layout` are ignored.
+    },
   },
 })
