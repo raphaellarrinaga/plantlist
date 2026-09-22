@@ -65,18 +65,48 @@ async function fetchImageKitFiles() {
   return files
 }
 
-function buildImagesBySlug(files) {
+async function fetchCredits(auth, sheetId) {
+  const sheets = google.sheets({ version: 'v4', auth })
+  const { data } = await sheets.spreadsheets.values.get({
+    spreadsheetId: sheetId,
+    range: 'credits!A1:C1000',
+  })
+  if (!data.values) return {}
+
+  const [headers, ...rows] = data.values
+  const fileIdx = headers.indexOf('Fichier')
+  const authorIdx = headers.indexOf('Auteur')
+  const sourceIdx = headers.indexOf('Source')
+
+  const creditsByFile = {}
+  for (const row of rows) {
+    const fileName = (row[fileIdx] || '').trim()
+    if (!fileName) continue
+    creditsByFile[fileName.toLowerCase()] = {
+      author: (row[authorIdx] || '').trim(),
+      source: (row[sourceIdx] || '').trim(),
+    }
+  }
+  return creditsByFile
+}
+
+function buildImagesBySlug(files, creditsByFile) {
   const imagesMap = {}
   const thumbMap = {}
   const unmatched = []
+  const uncredited = []
 
   for (const file of files) {
+    const credit = creditsByFile[file.name.toLowerCase()] || null
+    if (!credit) uncredited.push(file.name)
+
     const thumbMatch = file.name.match(THUMB_FILENAME_RE)
     if (thumbMatch) {
       const slug = slugify(thumbMatch[1].replace(/_/g, ' '))
-      thumbMap[slug] = file.url
+      thumbMap[slug] = { url: file.url, credit }
       continue
     }
+
 
     const imgMatch = file.name.match(IMAGE_FILENAME_RE)
     if (imgMatch) {
@@ -87,6 +117,7 @@ function buildImagesBySlug(files) {
         index: Number(index),
         caption: caption ? caption.replace(/_/g, ' ') : null,
         url: file.url,
+        credit,
       })
       continue
     }
@@ -98,6 +129,9 @@ function buildImagesBySlug(files) {
     imagesMap[slug].sort((a, b) => a.index - b.index)
   }
 
+  if (uncredited.length) {
+    console.warn(`⚠ ${uncredited.length} image(s) sans entrée dans l'onglet Credits :`, uncredited)
+  }
   if (unmatched.length) {
     console.warn(`⚠ ${unmatched.length} fichier(s) ImageKit ignoré(s) (nom non conforme) :`, unmatched)
   }
@@ -154,13 +188,15 @@ async function main() {
   )
   const plants = tabResults.flat()
 
+  const creditsByFile = await fetchCredits(auth, process.env.GOOGLE_SHEET_ID)
   const imagekitFiles = await fetchImageKitFiles()
-  const { imagesMap, thumbMap } = buildImagesBySlug(imagekitFiles)
+  const { imagesMap, thumbMap } = buildImagesBySlug(imagekitFiles, creditsByFile)
 
   const unmatchedPlants = []
   for (const plant of plants) {
     plant.images = imagesMap[plant.slug] || []
-    plant.thumbnail = thumbMap[plant.slug] || plant.images[0]?.url || null
+    plant.thumbnail = thumbMap[plant.slug]?.url || plant.images[0]?.url || null
+    plant.thumbnailCredit = thumbMap[plant.slug]?.credit || plant.images[0]?.credit || null
     if (!plant.images.length) unmatchedPlants.push(plant.scientificName)
   }
 

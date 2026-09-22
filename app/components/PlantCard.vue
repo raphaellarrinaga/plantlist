@@ -72,6 +72,15 @@ const isMedicinal = computed(() => props.plant.medicinal?.trim().toLowerCase() =
 const isInvasive = computed(() => props.plant.invasive?.trim().toLowerCase() === 'oui')
 const isToxic = computed(() => props.plant.toxic?.trim().toLowerCase() === 'oui')
 const isNative = computed(() => props.plant.origin === 'Indigène')
+
+function subHtml(img: { caption: string | null; credit: any }) {
+  const credit = creditLabel(img.credit)
+  const parts = []
+  console.log('subHtml', img, credit)
+  if (img.caption) parts.push(img.caption)
+  if (credit) parts.push(`<small>${credit}</small>`)
+  return parts.join('<br>')
+}
 </script>
 
 <template>
@@ -82,8 +91,8 @@ const isNative = computed(() => props.plant.origin === 'Indigène')
           {{ plant.images.length }}
         </div>
 
-        <ClientOnly v-if="plant.images.length">
-        </ClientOnly>
+        <!-- <ClientOnly v-if="plant.images.length">
+        </ClientOnly> -->
 
         <ClientOnly v-if="plant.images.length">
           <Lightgallery :settings="{ speed: 400 }" :plugins="plugins" class="plant__gallery">
@@ -91,7 +100,7 @@ const isNative = computed(() => props.plant.origin === 'Indigène')
               v-for="(img, i) in plant.images"
               :key="img.url"
               :href="img.url"
-              :data-sub-html="img.caption || ''"
+              :data-sub-html="subHtml(img)"
               :style="i === 0 ? {} : { display: 'none' }"
             >
               <template v-if="i === 0">
