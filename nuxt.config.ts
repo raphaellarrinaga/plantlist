@@ -2,6 +2,8 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { fileURLToPath } from 'node:url'
 
+const umamiId = process.env.NUXT_PUBLIC_UMAMI_ID
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-01-27',
   devtools: { enabled: false },
@@ -40,6 +42,16 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/manifest.webmanifest' }
       ],
+      script: umamiId
+        ? [{
+            src: 'https://cloud.umami.is/script.js',
+            defer: true,
+            'data-website-id': umamiId,
+            'data-domains': 'plantlist.larrinaga-jardins.be',
+            'data-exclude-hash': 'true',
+            'data-do-not-track': 'true',
+          }]
+        : [],
     },
   },
 

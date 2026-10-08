@@ -102,7 +102,10 @@ watch(selectedSource, () => {
             class="slide quiz-item"
             :class="{ 'is-revealed': revealed.has(plant.slug) }"
           >
-            <button class="quiz-item__solution-toggle button-quiz" @click="toggleName(plant.slug)">👀</button>
+            <button
+              data-umami-event="quiz-reveal"
+              class="quiz-item__solution-toggle button-quiz"
+              @click="toggleName(plant.slug)">👀</button>
             <div class="quiz-item__front">
               <button class="quiz-item__image-toggle" @click="toggleImage(plant)">Changer d'image</button>
               <img

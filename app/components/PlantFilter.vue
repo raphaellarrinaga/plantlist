@@ -146,7 +146,9 @@ onMounted(() => store.initHeightRange())
           </label>
 
           <div class="form-item">
-            <button class="button button--form button--reset" @click="store.resetFilters()">
+            <button
+              data-umami-event="filter-list-reset"
+              class="button button--form button--reset" @click="store.resetFilters()">
               ↺ Reset
             </button>
           </div>
