@@ -134,11 +134,7 @@ function subHtml(img: { caption: string | null; credit: any }) {
       <div class="plant__header">
         <p class="plant__latin">
           {{ store.order === 'vernacularName' ? plant.vernacularName : plant.scientificName }}
-          <span v-if="isToxic" title="Toxique">☠️</span>
-          <span v-if="isInvasive" title="Invasive">⛔️</span>
-          <span v-if="plant.edible" title="Comestible">😋</span>
-          <span v-if="plant.melliferous" title="Mellifère">🐝</span>
-          <span v-if="isNative" title="Indigène">🇧🇪</span>
+          <span v-for="flag in plantFlags(plant)" :key="flag.title" :title="flag.title">{{ flag.icon }}</span>
         </p>
         <p class="plant__vernaculaire">
           {{ store.order === 'vernacularName' ? plant.scientificName : plant.vernacularName }}

@@ -89,16 +89,16 @@
   display: block;
   background: #f5f6fb;
   padding: 1rem;
-  overflow: hidden;
+  overflow-y: auto;
+  z-index: 4;
 
   opacity: 0;
   visibility: hidden;
   position: absolute;
-  bottom: 0;
-  min-height: 50%;
-  left: .75rem;
+  top: 35%;
   right: .75rem;
   bottom: .75rem;
+  left: .75rem;
   border-radius: 4px;
   z-index: 1;
   transition: none;

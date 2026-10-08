@@ -59,6 +59,11 @@ watch(selectedSource, () => {
   currentSlide.value = 0
   revealed.value.clear()
 })
+
+// const isMedicinal = computed(() => props.plant.medicinal?.trim().toLowerCase() === 'oui')
+// const isInvasive = computed(() => props.plant.invasive?.trim().toLowerCase() === 'oui')
+// const isToxic = computed(() => props.plant.toxic?.trim().toLowerCase() === 'oui')
+// const isNative = computed(() => props.plant.origin === 'Indigène')
 </script>
 
 <template>
@@ -108,11 +113,27 @@ watch(selectedSource, () => {
             </div>
             <div class="quiz-item__back">
               <h1 class="quiz-item__botanical">{{ plant.scientificName }}</h1>
-              <h2 class="quiz-item__familiar">{{ plant.vernacularName }}</h2>
+              <h2 class="quiz-item__familiar">
+                {{ plant.vernacularName }}
+                <span
+                  v-for="flag in plantFlags(plant)"
+                  :key="flag.title"
+                  :title="flag.title"
+                >{{ flag.icon }}</span>
+              </h2>
               <div class="quiz-item__metas">
-                <p class="quiz-item__type"><span class="quiz-item__label">Type: </span>{{ plant.type }}</p>
-                <p class="quiz-item__cycle"><span class="quiz-item__label">Cycle: </span>{{ plant.cycle }}</p>
-                <p class="quiz-item__bloomMonths"><span class="quiz-item__label">Floraison: </span>{{ plant.bloomMonths }}</p>
+                <p v-if="plant.family" class="quiz-item__family"><span class="quiz-item__label">Famille : </span>{{ plant.family }}</p>
+                <p v-if="plant.type" class="quiz-item__type"><span class="quiz-item__label">Type : </span>{{ plant.type }}</p>
+                <p v-if="plant.flowerColor" class="quiz-item__color"><span class="quiz-item__label">Couleur : </span>{{ plant.flowerColor }}</p>
+                <p v-if="plant.cycle" class="quiz-item__cycle"><span class="quiz-item__label">Cycle : </span>{{ plant.cycle }}</p>
+                <p v-if="plant.bloomMonths" class="quiz-item__bloomMonths"><span class="quiz-item__label">Floraison : </span>{{ plant.bloomMonths }}</p>
+                <p v-if="plant.exposure" class="quiz-item__exposition"><span class="quiz-item__label">Exposition : </span>{{ plant.exposure }}</p>
+                <p class="quiz-item__biotope"><span class="quiz-item__label">Biotope : </span>
+                  <span v-if="plant.biotope">{{ plant.biotope }} • </span>
+                  <span v-if="plant.soilType">{{ plant.soilType }} • </span>
+                  <span v-if="plant.acidity">{{ plant.acidity }} • </span>
+                  <span v-if="plant.humidity">{{ plant.humidity }}</span>
+                </p>
               </div>
             </div>
           </div>
