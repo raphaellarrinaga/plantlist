@@ -31,7 +31,7 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' },
         { property: 'og:type', content: 'website' },
         { property: 'og:title', content: 'Plantlist - plantes indigènes et exotiques' },
-        { property: 'og:description', content: 'Liste et infos sur les plantes sauvages en Belgique.' },
+        { property: 'og:description', content: 'Liste et infos sur les plantes sauvages en Belgique et plus.' },
         { property: 'og:image', content: 'https://plantqz.netlify.app/cgn-og-cover.png' },
       ],
       htmlAttrs: {
@@ -72,24 +72,19 @@ export default defineNuxtConfig({
     registerType: 'autoUpdate',
     manifest: {
       // Id and start_url should match. Chrome currently requires it.
-      id: '/',
-      start_url: '/',
-      name: 'Plant quiz',
+      name: 'Plantlist',
       short_name: 'Plantlist',
-      description: 'Application de reconnaissance de plantes sauvages.',
+      description: 'Liste et infos sur les plantes sauvages en Belgique et plus.',
+      lang: 'fr',
+      display: 'standalone',
+      start_url: '/',
+      id: '/',
       theme_color: '#541E76',
       background_color: '#ffffff',
       icons: [
-        {
-          src: '/icon-192x192.png',
-          sizes: '192x192',
-          type: 'image/png'
-        },
-        {
-          src: '/icon-512x512.png',
-          sizes: '512x512',
-          type: 'image/png'
-        }
+        { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+        { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
       ],
       "screenshots": [
         {

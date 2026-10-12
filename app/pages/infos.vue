@@ -17,7 +17,10 @@
           <p>Application en cours de développement et données en cours de complétion.</p>
           <p>N'hésitez pas à m'envoyer des retours <a href='mai&#108;t&#111;&#58;&#114;&#97;ph%61e&#108;&#46;l&#97;rri%&#54;E&#97;ga&#64;&#37;67%6D&#97;%6&#57;l&#46;co&#37;6D'>par mail</a> ou message.</p>
           <h3>Mobile & smartphone</h3>
-          <p>L'application est adaptée pour une utilisation sur mobile et smartphone. Via le navigateur web du smartphone, un message peut apparaître pour proposer l'installation de l'application. Sinon, aller dans les options de la page, en général "Ajouter à l'écran d'accueil".</p>
+          <p>L'application est adaptée pour une utilisation sur mobile et smartphone. Via le navigateur web du smartphone, un message peut apparaître pour proposer l'installation de l'application (Progressive Web App).</p>
+          <InstallHint />
+          <p>Sinon, aller dans les options de la page, en général "Ajouter à l'écran d'accueil".</p>
+          <p>Noter qu'il est possible qu'un rechargement de la page soit nécessaire pour mettre à jour les données de l'application.</p>
           <h3>Données et filtre "Source"</h3>
           <p>Certaines plantes peuvent être présentes sans que toutes les données soient complétées.</p>
           <p>Le choix des plantes a été fait en fonction des sources ci-dessous. Les détails sont soit complétés par moi-même, soit rédigés par IA (infos numériques).</p>

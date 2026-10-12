@@ -1,5 +1,4 @@
 <template>
-  <!-- <NuxtRouteAnnouncer /> -->
-  <!-- <NuxtWelcome /> -->
+  <NuxtPwaAssets />
   <NuxtPage />
 </template>
