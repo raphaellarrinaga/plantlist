@@ -12,6 +12,7 @@
     </header>
 
     <PlantFilter v-if="store.plants.length" />
+    <PlantDetailPanel />
 
     <div v-if="store.layout === 'table'" class="plants__header l-constrain">
       <span class="plants__header-latin">Nom</span>

@@ -14,6 +14,11 @@ export function useFilterUrlSync() {
   const router = useRouter()
   const route = useRoute()
 
+  const { selectedSlug } = usePlantPanel()
+  const basePath = route.path
+  let panelPushed = false
+  let applyingFromRoute = false
+
   // Avoids reading the hash from immediately triggering a write back to the URL.
   let syncing = false
 
@@ -43,6 +48,7 @@ export function useFilterUrlSync() {
     if (store.layout !== 'table') params.set('layout', store.layout)
     if (store.order !== 'scientificName') params.set('order', store.order)
 
+    if (selectedSlug.value) params.set('plant', selectedSlug.value)
     return params.toString()
   }
 
@@ -73,6 +79,11 @@ export function useFilterUrlSync() {
       store.bloomRange = [min, max]
     }
 
+    const plantSlug = params.get('plant')
+    if (plantSlug && store.plants.some(p => p.slug === plantSlug)) {
+      selectedSlug.value = plantSlug
+    }
+
     if (params.has('layout')) store.layout = params.get('layout') as 'grid' | 'table'
     if (params.has('order')) store.order = params.get('order') as typeof store.order
 
@@ -88,6 +99,33 @@ export function useFilterUrlSync() {
   onMounted(() => {
     store.initHeightRange()
     applyFromHash()
+  })
+
+  // Opening / closing the panel by the user → update the URL.
+  watch(selectedSlug, (slug) => {
+    if (syncing || applyingFromRoute || route.path !== basePath) return
+
+    if (slug) {
+      panelPushed = true
+      router.push({ path: route.path, hash: `#${serialize()}` })
+    } else if (panelPushed) {
+      panelPushed = false
+      router.back()
+    } else {
+      const hash = serialize()
+      router.replace({ path: route.path, hash: hash ? `#${hash}` : '' })
+    }
+  })
+
+  // Back / forward in the browser, or hash modified manually → update the panel.
+  watch(() => route.hash, () => {
+    const slug = new URLSearchParams(route.hash.replace(/^#/, '')).get('plant')
+    if ((slug ?? null) === selectedSlug.value) return
+
+    applyingFromRoute = true
+    selectedSlug.value = slug && store.plants.some(p => p.slug === slug) ? slug : null
+    panelPushed = !!selectedSlug.value
+    nextTick(() => { applyingFromRoute = false })
   })
 
   watch(

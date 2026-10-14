@@ -36,44 +36,6 @@
   border: none;
   height: 0;
   margin: 0;
-
-  & + .plant__more-item {
-    border-top: 1px solid #eaeaea;
-    padding-top: 1rem;
-  }
-}
-
-.plant__more-item {
-  display: flex;
-  align-items: flex-start;
-
-  h3 {
-    color: #777;
-    flex: 0 0 40%;
-    font-weight: 500;
-    font-size: 10px;
-    line-height: 1.5;
-    margin: .25rem 0 1rem;
-    text-transform: uppercase;
-
-    @media screen and (min-width: 421px) {
-      flex-basis: 8rem;
-    }
-  }
-
-  p {
-    flex: 0 0 60%;
-    margin-top: 0;
-    margin-bottom: 1rem;
-  }
-
-  span {
-    & + span {
-      &:before {
-        content: ", ";
-      }
-    }
-  }
 }
 
 //
@@ -187,26 +149,6 @@
     }
   }
 
-  .plant__more {
-    background: $white;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    padding: 1rem;
-    overflow: scroll;
-  }
-
-  .plant__more-item--remarques,
-  .plant__more-item--comestible,
-  .plant__more-item--medicinale,
-  .plant__more-item--invasive,
-  .plant__more-item--utilisation,
-  .plant__more-item--description {
-    display: block;
-  }
-
 }
 
 //
@@ -216,21 +158,6 @@
 .plant--table {
   margin-bottom: 0;
   position: relative;
-
-  .plant__more {
-    &:before {
-      background: $white;
-      border-radius: 3px;
-      display: block;
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: -1rem;
-      right: -1rem;
-      top: -1px;
-      z-index: -1;
-    }
-  }
 
   .plant__inner {
     border-bottom: 1px solid #eaeaea;
@@ -478,30 +405,6 @@
     .is-open & {
       background: #ececec;
       box-shadow: inset 1px 1px 1px rgba(#111, .14);
-    }
-  }
-
-  .plant__more {
-    margin-bottom: 1rem;
-    margin-top: .75rem;
-
-    @media screen and (min-width: 821px) {
-      flex: 1 0 100%;
-      margin-bottom: 0;
-      margin-top: .25rem;
-      padding-top: 1rem;
-      padding-left: 65px;
-    }
-  }
-
-  .plant__more-item--remarques,
-  .plant__more-item--comestible,
-  .plant__more-item--medicinale,
-  .plant__more-item--invasive,
-  .plant__more-item--utilisation,
-  .plant__more-item--description {
-    @media screen and (max-width: 821px) {
-      display: block;
     }
   }
 }

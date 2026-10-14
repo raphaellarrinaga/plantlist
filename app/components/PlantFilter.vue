@@ -171,7 +171,7 @@ onMounted(() => store.initHeightRange())
         </ul>
       </div>
       <div class="form-layout">
-        <a class="button" :class="{ 'button--active': store.layout === 'table' }" @click="store.layout = 'table'">⫢ Tableau</a>
+        <a class="button" :class="{ 'button--active': store.layout === 'table' }" @click="store.layout = 'table'">⫢ Liste</a>
         <a class="button" :class="{ 'button--active': store.layout === 'grid' }" @click="store.layout = 'grid'">⊞ Grille</a>
       </div>
     </div>

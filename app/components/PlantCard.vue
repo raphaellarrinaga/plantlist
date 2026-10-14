@@ -10,73 +10,17 @@ const plugins = [lgThumbnail, lgZoom]
 
 const props = defineProps<{ plant: Record<string, any> }>()
 
+const { open } = usePlantPanel()
+
 const gridThumbFailed = ref(false)
 const tableThumbFailed = ref(false)
-const imageFailed = ref(false)
-const thumbUrl = computed(() =>
-  props.plant.images[0] ? `${props.plant.images[0].url}?tr=w-400,q-80` : null
-)
 const gridImage = computed(() => props.plant.images[0]?.url ?? null)
 
 const store = usePlantsStore()
 
-const isOpen = ref(false)
-function toggleMore() {
-  isOpen.value = !isOpen.value
-}
-
-// Field groups.
-const detailGroups = [
-  [
-    { key: 'type', label: 'Type' },
-    { key: 'origin', label: 'Origine' },
-    { key: 'family', label: 'Famille' },
-    { key: 'cycle', label: 'Cycle' },
-    { key: 'rusticity', label: 'Rusticité' },
-    { key: 'leaves', label: 'Feuillage' },
-  ],
-  [
-    { key: 'exposure', label: 'Exposition' },
-    { key: 'biotope', label: 'Biotope' },
-    { key: 'soilType', label: 'Sol' },
-    { key: 'acidity', label: 'Acidité' },
-    { key: 'humidity', label: 'Humidité' },
-  ],
-  [
-    { key: 'edible', label: 'Comestible' },
-    { key: 'melliferous', label: 'Mellifère' },
-    { key: 'invasive', label: 'Invasive' },
-    { key: 'toxic', label: 'Toxique' },
-    { key: 'medicinal', label: 'Médicinale' },
-    { key: 'usage', label: 'Utilisation' },
-    { key: 'description', label: 'Description' },
-  ],
-]
-
-// Champs "base de données" : traités à part car regroupés sur une seule ligne (Ecosem / Ecoflora).
-const databaseLabels = computed(() => {
-  const labels: string[] = []
-  if (props.plant.ecosem) labels.push('Ecosem')
-  if (props.plant.ecoflora) labels.push('Ecoflora')
-  if (props.plant.ifapme) labels.push('IFAPME')
-  if (props.plant.natagora) labels.push('Natagora')
-  if (props.plant.sourceOther) labels.push('Autre')
-  return labels
-})
-
-const hasAnyDetail = computed(() =>
-  detailGroups.flat().some(f => props.plant[f.key]) || databaseLabels.value.length > 0
-)
-
-const isMedicinal = computed(() => props.plant.medicinal?.trim().toLowerCase() === 'oui')
-const isInvasive = computed(() => props.plant.invasive?.trim().toLowerCase() === 'oui')
-const isToxic = computed(() => props.plant.toxic?.trim().toLowerCase() === 'oui')
-const isNative = computed(() => props.plant.origin === 'Indigène')
-
 function subHtml(img: { caption: string | null; credit: any }) {
   const credit = creditLabel(img.credit)
   const parts = []
-  console.log('subHtml', img, credit)
   if (img.caption) parts.push(img.caption)
   if (credit) parts.push(`<small>${credit}</small>`)
   return parts.join('<br>')
@@ -163,7 +107,7 @@ function subHtml(img: { caption: string | null; credit: any }) {
       <p class="plant__color">{{ plant.flowerColor }}</p>
     </div>
 
-    <div class="plant__item plant__item-actions">
+    <!-- <div class="plant__item plant__item-actions">
       <button
         class="button"
         :class="hasAnyDetail ? 'plants-toggle' : 'plants-toggle-disabled'"
@@ -172,27 +116,17 @@ function subHtml(img: { caption: string | null; credit: any }) {
       >
         Détail <i>▾</i>
       </button>
-    </div>
-
-    <div v-if="hasAnyDetail && isOpen" class="plant__more">
-      <template v-for="(group, gi) in detailGroups" :key="gi">
-        <div
-          v-for="field in group.filter(f => plant[f.key])"
-          :key="field.key"
-          :class="`plant__more-item plant__more-item--${field.key}`"
-        >
-          <h3>{{ field.label }}</h3>
-          <p>{{ plant[field.key] }}</p>
-        </div>
-        <hr v-if="gi < detailGroups.length - 1" class="separator">
-      </template>
-
-      <div v-if="databaseLabels.length" class="plant__more-item plant__more-item--database">
-        <h3>Source</h3>
-        <p class="plant__database">
-          <span v-for="label in databaseLabels" :key="label">{{ label }}</span>
-        </p>
-      </div>
+    </div> -->
+    <div class="plant__item plant__item-actions">
+      <button
+        class="button"
+        :class="hasPlantDetail(plant) ? 'plants-toggle' : 'plants-toggle-disabled'"
+        :disabled="!hasPlantDetail(plant)"
+        :data-plant-trigger="plant.slug"
+        @click="open(plant.slug)"
+      >
+        Détail ▸
+      </button>
     </div>
   </div>
 </template>
