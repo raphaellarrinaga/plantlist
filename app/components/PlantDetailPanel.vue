@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
   locked.value = false
 })
 
-// --- Partage ---
+// --- Share ---
 const copied = ref(false)
 
 async function share() {
@@ -77,7 +77,7 @@ async function share() {
       setTimeout(() => (copied.value = false), 2000)
     }
   } catch {
-    // Partage annulé par l'utilisateur, ou presse-papiers refusé : rien à faire.
+    // Share canceled by user, or clipboard denied: nothing to do.
   }
 }
 </script>
@@ -110,7 +110,7 @@ async function share() {
               v-if="plant.images.length && !thumbFailed"
               :key="plant.slug"
               class="plant-panel__gallery"
-              :settings="{ speed: 400 }"
+              :settings="{ speed: 10 }"
               :plugins="plugins"
               :onAfterOpen="() => (galleryOpen = true)"
               :onAfterClose="() => (galleryOpen = false)"
@@ -135,12 +135,14 @@ async function share() {
           </header>
 
           <div class="plant-panel__body">
-            <dl v-for="(group, gi) in groups" :key="gi" class="plant-panel__group">
+            <div v-for="(group, gi) in groups" :key="gi" class="plant-panel__group">
               <template v-for="field in group" :key="field.key">
-                <dt class="plant-panel__label">{{ field.label }}</dt>
-                <dd>{{ plant[field.key] }}</dd>
+                <div class="plant-panel__field">
+                  <div class="plant-panel__label">{{ field.label }}</div>
+                  <div class="plant-panel__value">{{ plant[field.key] }}</div>
+                </div>
               </template>
-            </dl>
+            </div>
 
             <div v-if="plantSources(plant).length" class="plant-panel__group">
               <h3 class="plant-panel__label">Source</h3>
@@ -183,11 +185,17 @@ async function share() {
 }
 
 .plant-panel__header {
+  background-color: $page-color;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
   padding: 1.5rem;
-  background-color: $page-color;
+
+  > div:first-child {
+    flex: 1;
+    min-width: 0;
+  }
 
   @media screen and (min-width: 421px) {
     border-top-left-radius: .75rem;
@@ -228,36 +236,41 @@ async function share() {
 
 .plant-panel__group {
   margin: 0 0 1rem;
-  padding-bottom: 1rem;
+  padding-bottom: .25rem;
   border-bottom: 1px solid #eef0f6;
 
-  dd {
-    margin: 0.1rem 0 0;
+  &:nth-child(2) {
+    column-count: 2;
+    column-gap: 1rem;
+    padding-bottom: 1rem;
   }
+}
+
+.plant-panel__field {
+  break-inside: avoid;
+  margin-bottom: 0.75rem;
 }
 
 .plant-panel__label {
   color: #666;
   font-size: 0.8rem;
   font-weight: normal;
-  margin-bottom: 0.25rem;
-  margin-top: 0.5rem;
   text-transform: uppercase;
+  margin: 0 0 .25rem;
 }
-
 
 .plant-panel__sources {
   display: flex;
-  margin: 0;
+  margin: 0 0 .75rem;
   flex-wrap: wrap;
   gap: 0.4rem;
-}
 
-.plant-panel__sources span {
-  padding: 0.15rem 0.5rem;
-  background: #f5f6fb;
-  border-radius: 999px;
-  font-size: 0.85rem;
+  span {
+    padding: 0.15rem 0.5rem;
+    background: #f5f6fb;
+    border-radius: 999px;
+    font-size: 0.85rem;
+  }
 }
 
 .panel-enter-active,
@@ -297,21 +310,15 @@ async function share() {
   }
 }
 
-.plant-panel__header {
-  flex-wrap: wrap;
-
-  > div:first-child {
-    flex: 1;
-    min-width: 0;
-  }
-}
 .plant-panel__gallery {
   display: block;
   flex-basis: 100%;
+
+  a {
+    cursor: zoom-in;
+  }
 }
-.plant-panel__gallery a {
-  cursor: zoom-in;
-}
+
 .plant-panel__thumb {
   border-radius: .5rem;
   width: 100%;

@@ -129,12 +129,16 @@
   }
 
   .plant__item-actions {
-    top: 14rem;
+    top: 10rem;
     right: 0;
     bottom: 0;
     left: 0;
     position: absolute;
     z-index: 2;
+
+    @media screen and (min-width: 421px) {
+      top: 14rem;
+    }
 
     .button {
       height: 100%;

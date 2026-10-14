@@ -2,12 +2,14 @@ export const detailGroups = [
   [
     { key: 'category', label: 'Catégorie' },
     { key: 'type', label: 'Type' },
+  ],
+  [
     { key: 'family', label: 'Famille' },
     { key: 'origin', label: 'Origine' },
     { key: 'cycle', label: 'Cycle' },
     { key: 'rusticity', label: 'Rusticité' },
     { key: 'leaves', label: 'Feuillage' },
-    { key: 'height', label: 'Hauteur' },
+    { key: 'height', label: 'Hauteur (cm)' },
     { key: 'bloomMonths', label: 'Floraison' },
     { key: 'flowerColor', label: 'Fleur' },
   ],
