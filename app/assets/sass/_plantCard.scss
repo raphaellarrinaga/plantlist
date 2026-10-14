@@ -128,21 +128,20 @@
     }
   }
 
-  &:hover {
-    .plant__item-actions {
-      display: block;
-    }
-  }
-
   .plant__item-actions {
-    display: none;
-    // bottom: 1rem;
-    top: 1rem;
+    top: 14rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
     position: absolute;
-    right: 1rem;
     z-index: 2;
 
     .button {
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+      transition: none;
+
       i {
         display: none;
       }
@@ -400,11 +399,6 @@
     @media screen and (min-width: 1021px) {
       display: inline-block;
       width: auto;
-    }
-
-    .is-open & {
-      background: #ececec;
-      box-shadow: inset 1px 1px 1px rgba(#111, .14);
     }
   }
 }

@@ -17,6 +17,11 @@ function uniqueValues(list: string[]) {
   return [...new Set(list)].sort()
 }
 
+const HEIGHT_STOPS = [
+  0, 10, 20, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300,
+  400, 500, 750, 1000, 1500, 2000, 3000, 5000,
+]
+
 function parseHeightRange(value: string | undefined): number[] {
   if (!value) return []
   return value.split('-').map(v => Number(v.trim())).filter(n => !isNaN(n))
@@ -66,6 +71,11 @@ export const usePlantsStore = defineStore('plants', {
       return [0, all.length ? Math.max(...all) : 100] as [number, number]
     },
 
+    heightStops(): number[] {
+      const max = this.heightBounds[1]
+      return [...HEIGHT_STOPS.filter(v => v < max), max]
+    },
+
     filteredPlants: (s) => {
       const q = s.search.trim().toLowerCase()
       return s.plants
@@ -86,7 +96,7 @@ export const usePlantsStore = defineStore('plants', {
           const matchesPhoto = !s.hasPhoto || (p.images?.length ?? 0) > 0
           const [min, max] = s.heightRange
           const heights = parseHeightRange(p.height)
-          const matchesHeight = heights.length === 0 || heights.some(h => h >= min && h <= max)
+          const matchesHeight = rangesOverlap(parseHeightRange(p.height), min, max)
 
           const matchesSource = s.source.length === 0 ||
             s.source.some(label => !!p[SOURCE_FIELDS[label]])

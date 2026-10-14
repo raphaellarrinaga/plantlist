@@ -17,14 +17,6 @@ const tableThumbFailed = ref(false)
 const gridImage = computed(() => props.plant.images[0]?.url ?? null)
 
 const store = usePlantsStore()
-
-function subHtml(img: { caption: string | null; credit: any }) {
-  const credit = creditLabel(img.credit)
-  const parts = []
-  if (img.caption) parts.push(img.caption)
-  if (credit) parts.push(`<small>${credit}</small>`)
-  return parts.join('<br>')
-}
 </script>
 
 <template>
@@ -44,7 +36,7 @@ function subHtml(img: { caption: string | null; credit: any }) {
               v-for="(img, i) in plant.images"
               :key="img.url"
               :href="img.url"
-              :data-sub-html="subHtml(img)"
+              :data-sub-html="galleryItemHtml(img)"
               :style="i === 0 ? {} : { display: 'none' }"
             >
               <template v-if="i === 0">
@@ -107,16 +99,6 @@ function subHtml(img: { caption: string | null; credit: any }) {
       <p class="plant__color">{{ plant.flowerColor }}</p>
     </div>
 
-    <!-- <div class="plant__item plant__item-actions">
-      <button
-        class="button"
-        :class="hasAnyDetail ? 'plants-toggle' : 'plants-toggle-disabled'"
-        :disabled="!hasAnyDetail"
-        @click="toggleMore"
-      >
-        Détail <i>▾</i>
-      </button>
-    </div> -->
     <div class="plant__item plant__item-actions">
       <button
         class="button"
@@ -125,7 +107,7 @@ function subHtml(img: { caption: string | null; credit: any }) {
         :data-plant-trigger="plant.slug"
         @click="open(plant.slug)"
       >
-        Détail ▸
+        <span>Détail ▸</span>
       </button>
     </div>
   </div>

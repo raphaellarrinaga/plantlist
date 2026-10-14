@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import { onKeyStroke, useScrollLock } from '@vueuse/core'
 
+import Lightgallery from 'lightgallery/vue'
+import lgThumbnail from 'lightgallery/plugins/thumbnail'
+import lgZoom from 'lightgallery/plugins/zoom'
+import 'lightgallery/css/lightgallery.css'
+import 'lightgallery/css/lg-thumbnail.css'
+import 'lightgallery/css/lg-zoom.css'
+
+const plugins = [lgThumbnail, lgZoom]
+const galleryOpen = ref(false)
+const thumbFailed = ref(false)
+
 const store = usePlantsStore()
 const { selectedSlug, close } = usePlantPanel()
 
@@ -14,7 +25,9 @@ const groups = computed(() =>
     .filter(g => g.length)
 )
 
-onKeyStroke('Escape', () => { if (plant.value) close() })
+onKeyStroke('Escape', () => {
+  if (plant.value && !galleryOpen.value) close()
+})
 
 const body = ref<HTMLElement | null>(null)
 onMounted(() => { body.value = document.body })
@@ -27,6 +40,8 @@ function setBackgroundInert(value: boolean) {
 }
 
 watch(plant, async (current, previous) => {
+  thumbFailed.value = false
+  galleryOpen.value = false
   locked.value = !!current
   setBackgroundInert(!!current)
   await nextTick()
@@ -91,6 +106,32 @@ async function share() {
               </button>
               <button ref="closeBtn" class="plant-panel__close" aria-label="Fermer" @click="close">✕</button>
             </div>
+            <Lightgallery
+              v-if="plant.images.length && !thumbFailed"
+              :key="plant.slug"
+              class="plant-panel__gallery"
+              :settings="{ speed: 400 }"
+              :plugins="plugins"
+              :onAfterOpen="() => (galleryOpen = true)"
+              :onAfterClose="() => (galleryOpen = false)"
+            >
+              <a
+                v-for="(img, i) in plant.images"
+                :key="img.url"
+                :href="img.url"
+                :data-sub-html="galleryItemHtml(img)"
+                :aria-label="i === 0 ? `Agrandir les photos de ${plant.scientificName} (${plant.images.length})` : undefined"
+                :style="i === 0 ? {} : { display: 'none' }"
+              >
+                <img
+                  v-if="i === 0"
+                  :src="img.url"
+                  :alt="plant.vernacularName || plant.scientificName"
+                  class="plant-panel__thumb"
+                  @error="thumbFailed = true"
+                >
+              </a>
+            </Lightgallery>
           </header>
 
           <div class="plant-panel__body">
@@ -114,13 +155,14 @@ async function share() {
   </Teleport>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .plant-panel__overlay {
   position: fixed;
   inset: 0;
   z-index: 200;
   background: rgba(0, 0, 0, 0.4);
 }
+
 .plant-panel {
   position: absolute;
   top: 0;
@@ -140,21 +182,29 @@ async function share() {
   }
 }
 
-
 .plant-panel__header {
   display: flex;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 1.5rem;
-  background-color: #f6f6f6;
+  background-color: $page-color;
 
   @media screen and (min-width: 421px) {
     border-top-left-radius: .75rem;
     border-top-right-radius: .75rem;
   }
 }
-.plant-panel__title { margin: 0; font-size: 1.25rem; }
-.plant-panel__subtitle { margin: 0.25rem 0 0; color: #4f4f4f; }
+
+.plant-panel__title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.plant-panel__subtitle {
+  margin: 0.25rem 0 0;
+  color: $text-mid;
+}
+
 .plant-panel__close {
   align-self: flex-start;
   padding: 0;
@@ -167,6 +217,7 @@ async function share() {
   height: 2.5rem;
   width: 2.5rem;
 }
+
 .plant-panel__body {
   flex: 1;
   overflow-y: auto;
@@ -174,11 +225,17 @@ async function share() {
   padding: 1.5rem;
   padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
 }
+
 .plant-panel__group {
   margin: 0 0 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #eef0f6;
+
+  dd {
+    margin: 0.1rem 0 0;
+  }
 }
+
 .plant-panel__label {
   color: #666;
   font-size: 0.8rem;
@@ -187,13 +244,15 @@ async function share() {
   margin-top: 0.5rem;
   text-transform: uppercase;
 }
-.plant-panel__group dd { margin: 0.1rem 0 0; }
+
+
 .plant-panel__sources {
   display: flex;
   margin: 0;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
+
 .plant-panel__sources span {
   padding: 0.15rem 0.5rem;
   background: #f5f6fb;
@@ -201,7 +260,6 @@ async function share() {
   font-size: 0.85rem;
 }
 
-/* Animation : fondu du fond + glissement du panneau (même durée des deux côtés). */
 .panel-enter-active,
 .panel-leave-active { transition: opacity 0.25s ease; }
 .panel-enter-active .plant-panel,
@@ -216,11 +274,8 @@ async function share() {
   align-items: flex-start;
   gap: 0.5rem;
 }
+
 .plant-panel__share {
-  /* padding: 0.25rem 0.6rem; */
-  /* background: none; */
-  /* border: 1px solid #dee1ed; */
-  /* border-radius: 4px; */
   align-self: flex-start;
   padding: 0;
   background: none;
@@ -240,5 +295,27 @@ async function share() {
   .panel-leave-active .plant-panel {
     transition: none;
   }
+}
+
+.plant-panel__header {
+  flex-wrap: wrap;
+
+  > div:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+}
+.plant-panel__gallery {
+  display: block;
+  flex-basis: 100%;
+}
+.plant-panel__gallery a {
+  cursor: zoom-in;
+}
+.plant-panel__thumb {
+  border-radius: .5rem;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
 }
 </style>

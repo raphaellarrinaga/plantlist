@@ -54,6 +54,24 @@ const isHeightFiltered = computed(() =>
   store.heightRange[1] !== store.heightBounds[1]
 )
 
+async function setHeight(index: 0 | 1, e: Event) {
+  const input = e.target as HTMLInputElement
+  const [min, max] = store.heightBounds
+
+  // Un champ vidé retire la borne correspondante.
+  const raw = input.value.trim() === '' ? (index === 0 ? min : max) : Number(input.value)
+  if (Number.isNaN(raw)) return
+
+  const range: [number, number] = [...store.heightRange]
+  range[index] = Math.min(Math.max(raw, min), max)
+  if (range[0] > range[1]) range.reverse()
+  store.heightRange = range
+
+  // Réaffiche la valeur réellement retenue (corrigée ou inversée).
+  await nextTick()
+  input.value = String(store.heightRange[index])
+}
+
 onMounted(() => store.initHeightRange())
 </script>
 
@@ -110,26 +128,44 @@ onMounted(() => store.initHeightRange())
             :values="store.originValues" v-model="store.origin" />
 
           <div ref="heightDropdown" class="form-item form-item--dropdown">
-            <p
-              class="dropdown-toggle button button--form"
-              :class="{ 'is-active': isHeightFiltered }"
-              @click="showHeightDropdown = !showHeightDropdown"
-            >
+            <p class="dropdown-toggle button button--form" :class="{ 'is-active': isHeightFiltered }" @click="showHeightDropdown = !showHeightDropdown">
               ⬆️
               <span v-if="!isHeightFiltered">Taille</span>
-              <span v-else>{{ store.heightRange[0] }}–{{ store.heightRange[1] }}cm</span>
+              <span v-else>{{ formatHeight(store.heightRange[0]) }} – {{ formatHeight(store.heightRange[1]) }}</span>
               ▾
             </p>
             <div v-show="showHeightDropdown" class="dropdown dropdown--large">
               <div class="dropdown__content">
                 <RangeSlider
                   v-model="store.heightRange"
-                  :min="0"
+                  :min="store.heightBounds[0]"
                   :max="store.heightBounds[1]"
-                  unit="cm"
+                  :stops="store.heightStops"
+                  :format-label="formatHeight"
                 />
+                <div class="height-inputs">
+                  <label>
+                    De
+                    <input
+                      type="number" inputmode="numeric" min="0" step="10"
+                      :max="store.heightBounds[1]"
+                      :value="store.heightRange[0]"
+                      @change="setHeight(0, $event)"
+                    >
+                  </label>
+                  <label>
+                    à
+                    <input
+                      type="number" inputmode="numeric" min="0" step="10"
+                      :max="store.heightBounds[1]"
+                      :value="store.heightRange[1]"
+                      @change="setHeight(1, $event)"
+                    > cm
+                  </label>
+                </div>
               </div>
             </div>
+
           </div>
 
           <label class="form-item form-item--checkbox button" :class="{ 'is-active': store.edible }">
