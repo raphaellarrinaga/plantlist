@@ -187,7 +187,7 @@ async function main() {
   })
 
   const tabResults = await Promise.all(
-    SHEET_TABS.map(tab => fetchSheet(auth, process.env.GOOGLE_SHEET_ID, `${tab}!A1:AZ550`))
+    SHEET_TABS.map(tab => fetchSheet(auth, process.env.GOOGLE_SHEET_ID, `${tab}!A1:AZ660`))
   )
   const plants = tabResults.flat()
 
