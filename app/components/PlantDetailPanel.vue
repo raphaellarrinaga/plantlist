@@ -111,7 +111,7 @@ async function share() {
               v-if="plant.images.length && !thumbFailed"
               :key="plant.slug"
               class="plant-panel__gallery"
-              :settings="{ speed: 150 }"
+              :settings="GALLERY_SETTINGS"
               :plugins="plugins"
               :onAfterOpen="() => (galleryOpen = true)"
               :onAfterClose="() => (galleryOpen = false)"

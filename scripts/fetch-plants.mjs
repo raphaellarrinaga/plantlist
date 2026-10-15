@@ -44,6 +44,10 @@ const THUMB_FILENAME_RE = /^(.+)-thumb\.(jpe?g|png|webp)$/i
 const IMAGE_FILENAME_RE = /^(.+?)-(\d{2})(?:-(.+))?\.(jpe?g|png|webp)$/i
 const SHEET_TABS = ['data', 'ifapme', 'natagora']
 
+function splitNames(value) {
+  return (value || '').split(/[,;]/).map(n => n.trim()).filter(Boolean)
+}
+
 async function fetchImageKitFiles() {
   const auth = 'Basic ' + Buffer.from(process.env.IMAGEKIT_PRIVATE_KEY + ':').toString('base64')
   const files = []
@@ -159,10 +163,12 @@ function mapRow(headers, row) {
     entry[enKey] = raw[frHeader] ?? ''
   }
 
-  entry.slug = slugify(
-    [entry.scientificName, entry.subspecies, entry.variety].filter(Boolean).join(' ')
-    || entry.vernacularName || ''
-  )
+  const names = splitNames(entry.scientificName)
+  const suffix = [entry.subspecies, entry.variety].filter(Boolean).join(' ')
+  const candidates = names.length ? names : [entry.vernacularName].filter(Boolean)
+
+  entry.slugAliases = [...new Set(candidates.map(n => slugify(`${n} ${suffix}`)))]
+  entry.slug = entry.slugAliases[0] ?? ''
 
   return entry
 }
@@ -195,12 +201,42 @@ async function main() {
   const imagekitFiles = await fetchImageKitFiles()
   const { imagesMap, thumbMap } = buildImagesBySlug(imagekitFiles, creditsByFile)
 
+  const usedSlugs = new Set()
   const unmatchedPlants = []
   for (const plant of plants) {
-    plant.images = imagesMap[plant.slug] || []
-    plant.thumbnail = thumbMap[plant.slug]?.url || plant.images[0]?.url || null
-    plant.thumbnailCredit = thumbMap[plant.slug]?.credit || plant.images[0]?.credit || null
-    if (!plant.images.length) unmatchedPlants.push(plant.scientificName)
+    const images = []
+    let thumb = null
+
+    for (const alias of plant.slugAliases) {
+      usedSlugs.add(alias)
+      if (imagesMap[alias]) images.push(...imagesMap[alias])
+      if (!thumb && thumbMap[alias]) thumb = thumbMap[alias]
+    }
+
+    plant.images = images
+    plant.thumbnail = thumb?.url || images[0]?.url || null
+    plant.thumbnailCredit = thumb?.credit || images[0]?.credit || null
+    delete plant.slugAliases // inutile côté front, on allège le JSON
+
+    if (!images.length) unmatchedPlants.push(plant.scientificName)
+  }
+
+  // ImageKit files that don't match any plant.
+  const orphanSlugs = [...new Set([...Object.keys(imagesMap), ...Object.keys(thumbMap)])]
+    .filter(slug => !usedSlugs.has(slug))
+  if (orphanSlugs.length) {
+    console.warn(`⚠ ${orphanSlugs.length} nom(s) d'image sans plante correspondante :`, orphanSlugs)
+  }
+
+  // Two plants sharing the same slug (same plant in two tabs, identical names…).
+  const seen = new Set()
+  const duplicates = new Set()
+  for (const p of plants) {
+    if (seen.has(p.slug)) duplicates.add(p.slug)
+    seen.add(p.slug)
+  }
+  if (duplicates.size) {
+    console.warn('⚠ Slugs en double :', [...duplicates])
   }
 
   if (unmatchedPlants.length) {

@@ -28,7 +28,7 @@ const store = usePlantsStore()
         </div>
 
         <ClientOnly v-if="plant.images.length">
-          <Lightgallery :settings="{ speed: 150 }" :plugins="plugins" class="plant__gallery">
+          <Lightgallery :settings="GALLERY_SETTINGS" :plugins="plugins" class="plant__gallery">
             <a
               v-for="(img, i) in plant.images"
               :key="img.url"
