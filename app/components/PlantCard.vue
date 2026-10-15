@@ -28,7 +28,7 @@ const store = usePlantsStore()
         </div>
 
         <ClientOnly v-if="plant.images.length">
-          <Lightgallery :settings="{ speed: 10 }" :plugins="plugins" class="plant__gallery">
+          <Lightgallery :settings="{ speed: 150 }" :plugins="plugins" class="plant__gallery">
             <a
               v-for="(img, i) in plant.images"
               :key="img.url"
@@ -66,11 +66,19 @@ const store = usePlantsStore()
 
       <div class="plant__header">
         <p class="plant__latin">
-          {{ store.order === 'vernacularName' ? plant.vernacularName : plant.scientificName }}
+          <template v-if="store.order === 'vernacularName'">{{ plant.vernacularName }}</template>
+          <template v-else>
+            {{ plant.scientificName }}
+            <span v-if="varietyLabel(plant)" class="plant__variety">{{ varietyLabel(plant) }}</span>
+          </template>
           <span v-for="flag in plantFlags(plant)" :key="flag.title" :title="flag.title">{{ flag.icon }}</span>
         </p>
         <p class="plant__vernaculaire">
-          {{ store.order === 'vernacularName' ? plant.scientificName : plant.vernacularName }}
+          <template v-if="store.order === 'vernacularName'">
+            {{ plant.scientificName }}
+            <span v-if="varietyLabel(plant)" class="plant__variety">{{ varietyLabel(plant) }}</span>
+          </template>
+          <template v-else>{{ plant.vernacularName }}</template>
         </p>
       </div>
     </div>

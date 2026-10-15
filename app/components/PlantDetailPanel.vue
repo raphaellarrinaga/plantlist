@@ -96,6 +96,7 @@ async function share() {
             <div>
               <h2 id="plant-panel-title" class="plant-panel__title">
                 {{ plant.scientificName }}
+                <span v-if="varietyLabel(plant)" class="plant-panel__variety">{{ varietyLabel(plant) }}</span>
                 <span v-for="flag in plantFlags(plant)" :key="flag.title" :title="flag.title">{{ flag.icon }}</span>
               </h2>
               <p v-if="plant.vernacularName" class="plant-panel__subtitle">{{ plant.vernacularName }}</p>
@@ -110,7 +111,7 @@ async function share() {
               v-if="plant.images.length && !thumbFailed"
               :key="plant.slug"
               class="plant-panel__gallery"
-              :settings="{ speed: 10 }"
+              :settings="{ speed: 150 }"
               :plugins="plugins"
               :onAfterOpen="() => (galleryOpen = true)"
               :onAfterClose="() => (galleryOpen = false)"
@@ -120,7 +121,7 @@ async function share() {
                 :key="img.url"
                 :href="img.url"
                 :data-sub-html="galleryItemHtml(img)"
-                :aria-label="i === 0 ? `Agrandir les photos de ${plant.scientificName} (${plant.images.length})` : undefined"
+                :aria-label="i === 0 ? `Agrandir les photos de ${plantTitle(plant)} (${plant.images.length})` : undefined"
                 :style="i === 0 ? {} : { display: 'none' }"
               >
                 <img

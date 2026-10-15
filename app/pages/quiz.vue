@@ -115,14 +115,13 @@ watch(selectedSource, () => {
               >
             </div>
             <div class="quiz-item__back">
-              <h1 class="quiz-item__botanical">{{ plant.scientificName }}</h1>
+              <h1 class="quiz-item__botanical">
+                {{ plant.scientificName }}
+                <span v-if="varietyLabel(plant)" class="quiz-item__variety">{{ varietyLabel(plant) }}</span>
+                <span v-for="flag in plantFlags(plant)" :key="flag.title" :title="flag.title">{{ flag.icon }}</span>
+              </h1>
               <h2 class="quiz-item__familiar">
                 {{ plant.vernacularName }}
-                <span
-                  v-for="flag in plantFlags(plant)"
-                  :key="flag.title"
-                  :title="flag.title"
-                >{{ flag.icon }}</span>
               </h2>
               <div class="quiz-item__metas">
                 <p v-if="plant.family" class="quiz-item__family"><span class="quiz-item__label">Famille : </span>{{ plant.family }}</p>

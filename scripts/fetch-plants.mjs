@@ -159,7 +159,10 @@ function mapRow(headers, row) {
     entry[enKey] = raw[frHeader] ?? ''
   }
 
-  entry.slug = slugify(entry.scientificName || entry.vernacularName || '')
+  entry.slug = slugify(
+    [entry.scientificName, entry.subspecies, entry.variety].filter(Boolean).join(' ')
+    || entry.vernacularName || ''
+  )
 
   return entry
 }

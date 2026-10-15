@@ -81,6 +81,7 @@ export const usePlantsStore = defineStore('plants', {
       return s.plants
         .filter(p => {
           const matchesSearch = !q ||
+            p.variety?.toLowerCase().includes(q) ||
             p.vernacularName?.toLowerCase().includes(q) ||
             p.scientificName?.toLowerCase().includes(q)
           const matchesCategory = s.category.length === 0 || s.category.includes(p.category)
@@ -105,7 +106,10 @@ export const usePlantsStore = defineStore('plants', {
             matchesFlowerColor && matchesExposure && matchesOrigin && matchesBloom &&
             matchesEdible && matchesMedicinal && matchesInvasive && matchesPhoto && matchesHeight && matchesSource
         })
-        .sort((a, b) => (a[s.order] || '').localeCompare(b[s.order] || ''))
+        .sort((a, b) => {
+          const key = (p: any) => s.order === 'scientificName' ? plantTitle(p) : (p[s.order] || '')
+          return key(a).localeCompare(key(b))
+        })
     },
   },
 
