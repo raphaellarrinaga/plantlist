@@ -106,13 +106,14 @@ const store = usePlantsStore()
 
     <div class="plant__item plant__item-actions">
       <button
-        class="button"
+        class="button button--nostyle"
         :class="hasPlantDetail(plant) ? 'plants-toggle' : 'plants-toggle-disabled'"
         :disabled="!hasPlantDetail(plant)"
         :data-plant-trigger="plant.slug"
         @click="open(plant.slug)"
       >
-        <span>Détail ▸</span>
+        <span class="sr-only">Détail</span>
+        <i class="icn icn-arrow-right"></i>
       </button>
     </div>
   </div>

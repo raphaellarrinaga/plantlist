@@ -48,7 +48,7 @@ watch(plant, async (current, previous) => {
   if (current) {
     closeBtn.value?.focus({ preventScroll: true })
   } else if (previous) {
-    // Rend le focus au bouton « Détail » de la carte qui a ouvert le panneau.
+    // Focus on the "Detail" button of the card that opened the panel.
     document.querySelector<HTMLElement>(`[data-plant-trigger="${previous.slug}"]`)?.focus()
   }
 })
@@ -187,6 +187,7 @@ async function share() {
 
 .plant-panel__header {
   background-color: $page-color;
+  border-bottom: 1px solid $border-light;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -211,7 +212,7 @@ async function share() {
 
 .plant-panel__subtitle {
   margin: 0.25rem 0 0;
-  color: $text-mid;
+  color: $text-color;
 }
 
 .plant-panel__close {
@@ -238,7 +239,7 @@ async function share() {
 .plant-panel__group {
   margin: 0 0 1rem;
   padding-bottom: .25rem;
-  border-bottom: 1px solid #eef0f6;
+  border-bottom: 1px solid $border-light;
 
   &:nth-child(2) {
     column-count: 2;

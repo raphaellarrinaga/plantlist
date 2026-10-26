@@ -60,22 +60,6 @@ ul {
   max-width: 44rem;
 }
 
-.button {
-  background-color: $white;
-  border: 1px solid $border;
-  border-radius: .2rem;
-  line-height: 1.5;
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: 0 1px 1px rgba(17,17,17,.06);
-
-  font-size: .83rem;
-  padding: .4rem .4rem .3rem .4rem;
-
-  @media screen and (min-width: 460px) {
-  }
-}
-
 .form-item__checkbox {
   padding-left: .9rem;
   position: relative;
@@ -143,23 +127,4 @@ ul {
     border-color: rgb(78, 87, 188);
     background: rgb(237, 238, 253);
   }
-}
-
-.button--unchecked {
-  background: transparent;
-  border: 1px solid transparent;
-  color: $text-mid;
-  box-shadow: none;
-  appearance: none;
-
-  &:hover {
-    box-shadow: none;
-    border: 1px solid #dbdbdb;
-    color: $text-color;
-  }
-}
-
-.button--active {
-  border-color: rgb(78, 87, 188);
-  background: rgb(237, 238, 253);
 }

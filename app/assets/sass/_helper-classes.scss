@@ -1,0 +1,67 @@
+// Helper classes.
+
+@use "~/assets/sass/_abstracts" as *;
+
+.sr-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+
+.button {
+  background-color: $white;
+  border: 1px solid $border;
+  border-radius: .2rem;
+  line-height: 1.5;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 1px 1px rgba(17,17,17,.06);
+
+  font-size: .83rem;
+  padding: .4rem .4rem .3rem .4rem;
+
+  @media screen and (min-width: 460px) {
+  }
+}
+
+.button--unchecked {
+  background: transparent;
+  border: 1px solid transparent;
+  color: $text-mid;
+  box-shadow: none;
+  appearance: none;
+
+  &:hover {
+    box-shadow: none;
+    border: 1px solid #dbdbdb;
+    color: $text-color;
+  }
+}
+
+.button--active {
+  border-color: rgb(78, 87, 188);
+  background: rgb(237, 238, 253);
+}
+
+.button--nostyle {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.icn {
+  content: '';
+  display: inline-block;
+}
+
+.icn-arrow-right {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid $text-mid;
+  border-left: 1px solid $text-mid;
+  transform: rotate(135deg);
+}
