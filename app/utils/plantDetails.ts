@@ -16,9 +16,11 @@ export const detailGroups = [
   [
     { key: 'exposure', label: 'Exposition' },
     { key: 'biotope', label: 'Biotope' },
-    { key: 'soilType', label: 'Sol' },
-    { key: 'acidity', label: 'Acidité' },
+    { key: 'texture', label: 'Texture' },
     { key: 'humidity', label: 'Humidité' },
+    { key: 'fertility', label: 'Fertilité' },
+    { key: 'acidity', label: 'Acidité' },
+    { key: 'soilType', label: 'Sol' },
   ],
   [
     { key: 'edible', label: 'Comestible' },

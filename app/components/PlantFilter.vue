@@ -181,6 +181,15 @@ onMounted(() => store.initHeightRange())
             <input type="checkbox" v-model="store.hasPhoto"> Photo
           </label>
 
+          <div class="form-fieldgroup" role="group" aria-labelledby="filter-group-soil">
+            <!-- <span id="filter-group-soil" class="form-fieldgroup__label">Sol</span> -->
+            <FilterDropdown icon="🏞️" label="Biotope" multiple :values="store.biotopeValues" v-model="store.biotope" />
+            <FilterDropdown icon="💧" label="Humidité" multiple :values="store.humidityValues" v-model="store.humidity" />
+            <FilterDropdown icon="🍂" label="Fertilité" multiple :values="store.fertilityValues" v-model="store.fertility" />
+            <FilterDropdown icon="🧪" label="Acidité" multiple :values="store.acidityValues" v-model="store.acidity" />
+            <FilterDropdown icon="🪨" label="Texture" multiple :values="store.textureValues" v-model="store.texture" />
+          </div>
+
           <div class="form-item">
             <button
               data-umami-event="filter-list-reset"

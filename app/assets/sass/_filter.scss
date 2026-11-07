@@ -228,7 +228,7 @@
   z-index: 10;
   box-shadow: rgba(33, 0, 153, 0.144) 1px 1px 3px;
   width: auto;
-  min-width: 9rem;
+  min-width: 12rem;
 
   li {
     cursor: pointer;
@@ -327,3 +327,20 @@
   }
 }
 
+// Currently for soil.
+.form-fieldgroup {
+  display: flex;
+  flex-wrap: wrap;
+  // align-items: center;
+  // gap: 0.5rem;
+  // padding: 0.5rem 0.75rem;
+  // border: 1px solid #dee1ed;
+  // border-radius: 6px;
+}
+
+// .form-fieldgroup__label {
+//   width: 100%;
+//   font-size: 0.8rem;
+//   text-transform: uppercase;
+//   color: #666;
+// }

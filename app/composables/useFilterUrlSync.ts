@@ -9,6 +9,8 @@ const FILTER_KEYS = [
 
 const DISPLAY_KEYS = ['layout', 'order'] as const
 
+const SOIL_KEYS = ['biotope', 'humidity', 'fertility', 'acidity', 'texture'] as const
+
 export function useFilterUrlSync() {
   const store = usePlantsStore()
   const router = useRouter()
@@ -48,6 +50,10 @@ export function useFilterUrlSync() {
     if (store.layout !== 'table') params.set('layout', store.layout)
     if (store.order !== 'scientificName') params.set('order', store.order)
 
+    for (const k of SOIL_KEYS) {
+      if (store[k].length) params.set(k, store[k].join(','))
+    }
+
     if (selectedSlug.value) params.set('plant', selectedSlug.value)
     return params.toString()
   }
@@ -86,6 +92,10 @@ export function useFilterUrlSync() {
 
     if (params.has('layout')) store.layout = params.get('layout') as 'grid' | 'table'
     if (params.has('order')) store.order = params.get('order') as typeof store.order
+
+    for (const k of SOIL_KEYS) {
+      if (params.has(k)) store[k] = params.get(k)!.split(',')
+    }
 
     nextTick(() => { syncing = false })
   }
@@ -129,7 +139,7 @@ export function useFilterUrlSync() {
   })
 
   watch(
-    () => [...FILTER_KEYS, ...DISPLAY_KEYS].map(k => JSON.stringify((store as any)[k])),
+    () => [...FILTER_KEYS, ...DISPLAY_KEYS, ...SOIL_KEYS].map(k => JSON.stringify((store as any)[k])),
     writeHash
   )
 }

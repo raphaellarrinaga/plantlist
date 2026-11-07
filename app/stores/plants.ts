@@ -9,6 +9,23 @@ const SOURCE_FIELDS: Record<string, string> = {
   Autre: 'sourceOther',
 }
 
+// Display order of gradients (otherwise alphabetical order would be misleading).
+const HUMIDITY_ORDER = ['Marécageux', 'Humide', 'Frais', 'Sec', 'Très sec']
+const FERTILITY_ORDER = ['Pauvre', 'Moyen', 'Riche']
+const ACIDITY_ORDER = ['Acide', 'Faiblement acide', 'Neutre', 'Basique']
+
+function sortByScale(values: string[], scale: string[]) {
+  const rank = (v: string) => {
+    const i = scale.indexOf(v)
+    return i === -1 ? scale.length : i
+  }
+  return [...values].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
+}
+
+function matchesAny(selected: string[], value?: string) {
+  return selected.length === 0 || splitField(value).some(v => selected.includes(v))
+}
+
 function splitField(value: string | undefined) {
   return value ? value.split(',').map(v => v.trim()).filter(Boolean) : []
 }
@@ -48,6 +65,11 @@ export const usePlantsStore = defineStore('plants', {
     bloomRange: [1, 12] as [number, number],
     origin: 'all',
     heightRange: [0, 0] as [number, number],
+    biotope: [] as string[],
+    humidity: [] as string[],
+    fertility: [] as string[],
+    acidity: [] as string[],
+    texture: [] as string[],
     edible: false,
     medicinal: false,
     invasive: false,
@@ -65,6 +87,12 @@ export const usePlantsStore = defineStore('plants', {
     flowerColorValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.flowerColor))),
     exposureValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.exposure))),
     sourceValues: () => Object.keys(SOURCE_FIELDS),
+    // Soil.
+    biotopeValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.biotope))),
+    humidityValues: (s) => sortByScale(uniqueValues(s.plants.flatMap(p => splitField(p.humidity))), HUMIDITY_ORDER),
+    fertilityValues: (s) => sortByScale(uniqueValues(s.plants.flatMap(p => splitField(p.fertility))), FERTILITY_ORDER),
+    acidityValues: (s) => sortByScale(uniqueValues(s.plants.flatMap(p => splitField(p.acidity))), ACIDITY_ORDER),
+    textureValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.texture))),
 
     heightBounds: (s) => {
       const all = s.plants.flatMap(p => parseHeightRange(p.height))
@@ -98,13 +126,19 @@ export const usePlantsStore = defineStore('plants', {
           const [min, max] = s.heightRange
           const heights = parseHeightRange(p.height)
           const matchesHeight = rangesOverlap(parseHeightRange(p.height), min, max)
+          const matchesSoil =
+            matchesAny(s.biotope, p.biotope) &&
+            matchesAny(s.humidity, p.humidity) &&
+            matchesAny(s.fertility, p.fertility) &&
+            matchesAny(s.acidity, p.acidity) &&
+            matchesAny(s.texture, p.texture)
 
           const matchesSource = s.source.length === 0 ||
             s.source.some(label => !!p[SOURCE_FIELDS[label]])
 
           return matchesSearch && matchesCategory && matchesType && matchesFamily &&
             matchesFlowerColor && matchesExposure && matchesOrigin && matchesBloom &&
-            matchesEdible && matchesMedicinal && matchesInvasive && matchesPhoto && matchesHeight && matchesSource
+            matchesEdible && matchesMedicinal && matchesInvasive && matchesPhoto && matchesHeight && matchesSource && matchesSoil
         })
         .sort((a, b) => {
           const key = (p: any) => s.order === 'scientificName' ? plantTitle(p) : (p[s.order] || '')
@@ -132,6 +166,11 @@ export const usePlantsStore = defineStore('plants', {
       this.source = []
       this.heightRange = this.heightBounds
       this.bloomRange = [1, 12]
+      this.biotope = []
+      this.humidity = []
+      this.fertility = []
+      this.acidity = []
+      this.texture = []
       // `order` and `layout` are ignored.
     },
   },
