@@ -13,9 +13,20 @@ const SOURCE_FIELDS: Record<string, string> = {
 const HUMIDITY_ORDER = ['Marécageux', 'Humide', 'Frais', 'Sec', 'Très sec']
 const FERTILITY_ORDER = ['Pauvre', 'Moyen', 'Riche']
 const ACIDITY_ORDER = ['Acide', 'Faiblement acide', 'Neutre', 'Basique']
+const EXPOSURE_ORDER = ['Soleil', 'Mi-ombre', 'Ombre']
+
+const ALL_VALUE = 'Indifférent'
+
+function optionValues(list: string[]) {
+  const values = uniqueValues(list)
+  return values.includes(ALL_VALUE)
+    ? [ALL_VALUE, ...values.filter(v => v !== ALL_VALUE)]
+    : values
+}
 
 function sortByScale(values: string[], scale: string[]) {
   const rank = (v: string) => {
+    if (v === ALL_VALUE) return -1
     const i = scale.indexOf(v)
     return i === -1 ? scale.length : i
   }
@@ -85,7 +96,8 @@ export const usePlantsStore = defineStore('plants', {
     familyValues: (s) => uniqueValues(s.plants.map(p => p.family).filter(Boolean)),
     originValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.origin))),
     flowerColorValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.flowerColor))),
-    exposureValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.exposure))),
+    // exposureValues: (s) => optionValues(s.plants.flatMap(p => splitField(p.exposure))),
+    exposureValues: (s) => sortByScale(optionValues(s.plants.flatMap(p => splitField(p.exposure))), EXPOSURE_ORDER),
     sourceValues: () => Object.keys(SOURCE_FIELDS),
     // Soil.
     biotopeValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.biotope))),
@@ -116,7 +128,10 @@ export const usePlantsStore = defineStore('plants', {
           const matchesType = s.type.length === 0 || splitField(p.type).some(t => s.type.includes(t))
           const matchesFamily = s.family === 'all' || p.family === s.family
           const matchesFlowerColor = s.flowerColor.length === 0 || splitField(p.flowerColor).some(c => s.flowerColor.includes(c))
-          const matchesExposure = s.exposure === 'all' || splitField(p.exposure).includes(s.exposure)
+          const exposureOf = splitField(p.exposure)
+          const matchesExposure = s.exposure === 'all'
+            || exposureOf.includes(ALL_VALUE)
+            || exposureOf.includes(s.exposure)
           const matchesOrigin = s.origin === 'all' || splitField(p.origin).includes(s.origin)
           const matchesBloom = (s.bloomRange[0] === 1 && s.bloomRange[1] === 12) || rangesOverlap(parseHeightRange(p.bloomMonths), s.bloomRange[0], s.bloomRange[1])
           const matchesEdible = !s.edible || !!p.edible?.trim()
