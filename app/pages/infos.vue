@@ -38,6 +38,30 @@
             <li>Idem pour les icones à droite du nom des plantes, celles qui ne sont pas complétées entièrement n'afficheront pas l'icone donc ce n'est pas parce qu'elle n'a pas l'icone qu'elle n'a pas le critère en question (comestible, toxique, indigène, etc.)</li>
             <li>Les filtres sont multiples quand c'est possible. Dans le filtre "Type" par exemple, une plante peut avoir le type "Arbre" mais aussi "Conifère". Elle apparaitra dans les deux cas. Pareil pour l'exposition si elle accepte l'ombre et la mi-ombre. Ou la couleur de la fleur si elle est mauve et qu'elle comporte aussi du jaune ou que les fleurs sont parfois considées bleues ou violet comme le bleuet par exemple.</li>
             <li>Le click sur une vignette de photos affiche le ou les images disponibles en grand. Le numéro en bas à droite de la vignette correspond au nombre d'images pour la plante.</li>
+            <li>
+              Les filtres humidité, fertilité et acidité sont simplifiés techniquement, mais on peut aussi les interpréter comme ceci :
+              <p>Humidité :</p>
+              <ul>
+                <li>Marécageux : hydrophile</li>
+                <li>Humide : hygrophile</li>
+                <li>Frais : mésophile</li>
+                <li>Sec : xérocline</li>
+                <li>Très sec : xérophile, xérique</li>
+              </ul>
+              <p>Fertilité :</p>
+              <ul>
+                <li>Pauvre : oligotrophe</li>
+                <li>Moyen : mésotrophe</li>
+                <li>Riche : eutrophe</li>
+              </ul>
+              <p>Acidité :</p>
+              <ul>
+                <li>Acide : acidophile</li>
+                <li>Faiblement acide : acidocline</li>
+                <li>Neutre : neutrophile</li>
+                <li>Basique : basophile calcicole</li>
+              </ul>
+            </li>
           </ul>
           <h3>Exemples de cas d'utilisation de la page liste</h3>
           <ul>
