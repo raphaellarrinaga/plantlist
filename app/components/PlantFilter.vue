@@ -182,7 +182,7 @@ onMounted(() => store.initHeightRange())
           </label>
 
           <div class="form-fieldgroup" role="group" aria-labelledby="filter-group-soil">
-            <!-- <span id="filter-group-soil" class="form-fieldgroup__label">Sol</span> -->
+            <span id="filter-group-soil" class="form-fieldgroup__label">Sol</span>
             <FilterDropdown icon="🏞️" label="Biotope" multiple :values="store.biotopeValues" v-model="store.biotope" />
             <FilterDropdown icon="💧" label="Humidité" multiple :values="store.humidityValues" v-model="store.humidity" />
             <FilterDropdown icon="🍂" label="Fertilité" multiple :values="store.fertilityValues" v-model="store.fertility" />

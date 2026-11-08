@@ -96,7 +96,6 @@ export const usePlantsStore = defineStore('plants', {
     familyValues: (s) => uniqueValues(s.plants.map(p => p.family).filter(Boolean)),
     originValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.origin))),
     flowerColorValues: (s) => uniqueValues(s.plants.flatMap(p => splitField(p.flowerColor))),
-    // exposureValues: (s) => optionValues(s.plants.flatMap(p => splitField(p.exposure))),
     exposureValues: (s) => sortByScale(optionValues(s.plants.flatMap(p => splitField(p.exposure))), EXPOSURE_ORDER),
     sourceValues: () => Object.keys(SOURCE_FIELDS),
     // Soil.
